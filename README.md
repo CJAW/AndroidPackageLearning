@@ -36,7 +36,7 @@ intent总结：如果用intent启动服务service应该使用显示的启动。
 
 
 
-                                                       service
+                                                                service
                                                  
                                                  
                                                  
