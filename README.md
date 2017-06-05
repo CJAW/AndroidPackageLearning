@@ -58,36 +58,85 @@ intent总结：如果用intent启动服务service应该使用显示的启动。
 
 
 
-客户端进行了主件的绑定，需要实现：
+
+
+                                              客户端进行了主件的绑定，需要实现：
+                                              
+                                              
 实现 ServiceConnection。
-您的实现必须重写两个回调方法：
-onServiceConnected()
-系统会调用该方法以传递服务的　onBind() 方法返回的 IBinder。
+
+
+您的实现必须重写两个回调方法：onServiceConnected()
+
+
+系统会调用该方法以传递服务的　onBind() 方法返回的 IBinder。（即 onserviceconnected（）方法中的ibinder参数可以调用service的方法，且包涵数据）
+
+
 onServiceDisconnected()
+
+
 Android 系统会在与服务的连接意外中断时（例如当服务崩溃或被终止时）调用该方法。当客户端取消绑定时，系统“不会”调用该方法。
+
+
 调用 bindService()，传递 ServiceConnection 实现。
-当系统调用您的 onServiceConnected() 回调方法时，您可以使用接口定义的方法开始调用服务。
+
+
+当系统调用您的 onServiceConnected() 回调方法时，您可以使用接口定义的方法开始调用服务
+
+
 要断开与服务的连接，请调用 unbindService()。
+
+
 如果应用在客户端仍绑定到服务时销毁客户端，则销毁会导致客户端取消绑定。 更好的做法是在客户端与服务交互完成后立即取消绑定客户端。 这样可以关闭空闲服务。如需了解有关绑定和取消绑定的适当时机的详细信息，请参阅附加说明。
+
+
 例如，以下代码段通过扩展 Binder 类将客户端与上面创建的服务相连，因此它只需将返回的 IBinder 转换为 LocalService 类并请求 LocalService 实例：
 
+
 LocalService mService;
+
 private ServiceConnection mConnection = new ServiceConnection() {
+
+
     // Called when the connection with the service is established
+    
+    
     public void onServiceConnected(ComponentName className, IBinder service) {
+    
+    
         // Because we have bound to an explicit
+        
+        
         // service that is running in our own process, we can
+        
+        
         // cast its IBinder to a concrete class and directly access it.
+        
+        
         LocalBinder binder = (LocalBinder) service;
+        
+        
         mService = binder.getService();
+        
+        
         mBound = true;
     }
 
     // Called when the connection with the service disconnects unexpectedly
+    
+    
     public void onServiceDisconnected(ComponentName className) {
+    
+    
         Log.e(TAG, "onServiceDisconnected");
+        
+        
         mBound = false;
+        
+        
     }
+    
+    
 };
  
                    
